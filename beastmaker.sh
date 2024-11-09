@@ -1,5 +1,24 @@
 #!/bin/bash
 
+echo "Downloading your motivational quote from openai"
+
+quote=$(curl -s https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $BEASTMAKER_OPENAI_API" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a sports coach from Switzerland."
+      },
+      {
+        "role": "user",
+        "content": "10 word motivational quote for training for climbing"
+      }
+    ]
+    }' |jq '.choices.[].message.content' |sed 's!"\\"\(.*\)\\""!\1!g')
+
 # Take a random voice
 for name in $(say -v '?'  |grep 'en_' |awk '{print $1}'); do
     voices+=("$name");
@@ -30,6 +49,10 @@ repetitions=6
 sets=7
 rest=60
 smallRest=3
+
+echo "$quote"
+s "$quote"
+sleep 3
 
 for ((j=5; j > 0; j--)) do
     s $j 360 &
