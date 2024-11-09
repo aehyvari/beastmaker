@@ -73,9 +73,10 @@ for ((k=0; k < ${#holds[@]}; k++)); do
     s Start
     for ((i=0; i < $repetitions; i++)); do
         echo -n "$i "
-        for ((j=0; j < $sets; j++)); do
-            echo -ne '\007';
-            sleep 1;
+        for ((j=$sets; j > 0; j--)); do
+            s $j 360 &
+            sleep 1 &
+            wait
         done;
         if [ $i != $(($repetitions-1)) ]; then
             s "Rest $smallRest seconds" &
