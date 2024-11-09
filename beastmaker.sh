@@ -1,23 +1,29 @@
 #!/bin/bash
 
-echo "Downloading your motivational quote from openai"
+if [ ! -z $BEASTMAKER_OPENAI_API ]; then
+    echo "Downloading your motivational quote from openai"
 
-quote=$(curl -s https://api.openai.com/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $BEASTMAKER_OPENAI_API" \
-  -d '{
-    "model": "gpt-4o-mini",
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are a sports coach from Switzerland."
-      },
-      {
-        "role": "user",
-        "content": "10 word motivational quote for training for climbing"
-      }
-    ]
-    }' |jq '.choices.[].message.content' |sed 's!"\\"\(.*\)\\""!\1!g')
+    quote=$(curl -s https://api.openai.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $BEASTMAKER_OPENAI_API" \
+      -d '{
+        "model": "gpt-4o-mini",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a sports coach from Switzerland."
+          },
+          {
+            "role": "user",
+            "content": "10 word motivational quote for training for climbing"
+          }
+        ],
+        "temperature": 2
+        }' |jq '.choices.[].message.content' |sed 's!"\\"\(.*\)\\""!\1!g')
+else
+    echo "Set BEASTMAKER_OPENAI_API to enable your virtual coach!"
+    quote="For what is climbing but an intimate dance between you and the rock"
+fi
 
 # Take a random voice
 for name in $(say -v '?'  |grep 'en_' |awk '{print $1}'); do
