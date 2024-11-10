@@ -1,5 +1,10 @@
 #!/bin/bash
 
+SCRIPTDIR=$(cd $(dirname $0); pwd)
+
+START_SAMPLE=$SCRIPTDIR/data/F7.mp3
+END_SAMPLE=$SCRIPTDIR/data/B.mp3
+
 if [ ! -z $BEASTMAKER_OPENAI_API ]; then
     echo "Downloading your motivational quote from openai"
 
@@ -73,15 +78,11 @@ for ((k=0; k < ${#holds[@]}; k++)); do
     s Start
     for ((i=0; i < $repetitions; i++)); do
         echo -n "$i "
-        for ((j=$sets; j > 0; j--)); do
-            s $j 360 &
-            sleep 1 &
-            wait
-        done;
+        afplay $START_SAMPLE &
+        sleep $sets
+        afplay $END_SAMPLE &
         if [ $i != $(($repetitions-1)) ]; then
-            s "Rest $smallRest seconds" &
-            sleep $smallRest &
-            wait
+            sleep $smallRest
         fi
     done
     echo
