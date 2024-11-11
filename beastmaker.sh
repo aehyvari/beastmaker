@@ -61,12 +61,14 @@ sets=7
 rest=60
 smallRest=3
 
+quickRate=360
+
 echo "$quote"
 s "$quote"
 sleep 3
 
 for ((j=5; j > 0; j--)) do
-    s $j 360 &
+    s $j $quickRate &
     sleep 1 &
     wait
 done;
@@ -97,7 +99,7 @@ for ((k=0; k < ${#holds[@]}; k++)); do
     done
     for ((i=5; i > 0; i--)); do
         echo -n "$i ";
-        s $i 360 &
+        s $i $quickRate &
         sleep 1 &
         wait
     done
